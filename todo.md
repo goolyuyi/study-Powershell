@@ -18,3 +18,8 @@
   * DDC/CI Monitor
   * Python way?
   * Automatic according time
+
+* study bash-like:
+  * zsh:https://zsh.sourceforge.io/Guide/zshguide02.html
+  * bash:https://learnxinyminutes.com/docs/bash/
+

@@ -78,7 +78,7 @@ Get-Command -Noun U*
 You should figure out these auto vars below:
 
 * `$PSVersionTable`
-* `$_`
+* `$_` same as `$PSItem`
 * `$false,$true,$null`
 * `$HOME`
 * `$args`
@@ -187,7 +187,7 @@ $p = @(Get-Process Notepad)
 
 `()` - Grouping
 
-`${}` - Subexpression
+`$()` - Subexpression
 
 ```powershell
 "Today is $(Get-Date)"
@@ -301,3 +301,10 @@ while ($date.DayOfWeek -ne 'Thursday') {
 }
 Write-Output $date
 ```
+
+## Invokes
+
+* `Invoke-Command`: run command on local or remote sessions
+  * `Invoke-Command -FilePath c:\scripts\test.ps1 -ComputerName Server01`
+* `Invoke-Expression`: Runs commands or expressions on the local computer.
+  * run anything like exe,script,bash script,ps1...
