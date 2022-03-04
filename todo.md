@@ -1,9 +1,10 @@
 * Config
-  * PSReadline
-  * Profile
+  * [x] PSReadline
+  * [x] Profile
 
-* pycharm run as admin?
+* [x] pycharm run as admin?
 * [x] new object/oo in powershell?
+* follow chromes tab
 * WSMan
 * -h human
 * File size 
