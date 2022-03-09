@@ -1,3 +1,5 @@
+* [ ] study cmder 
+
 * Config
   * [x] PSReadline
   * [x] Profile
