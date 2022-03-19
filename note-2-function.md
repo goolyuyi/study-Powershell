@@ -15,7 +15,8 @@
 * [about_CommonParameters](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_commonparameters?view=powershell-7.2)
 * [about_Comment_Based_Help](https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_comment_based_help?view=powershell-7.2)
 * [about_Scopes](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.2)
-
+* [about_Parsing](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing?view=powershell-7.2#passing-arguments-that-contain-quote-characters)
+* 
 ### Basic
 
 ```powershell
