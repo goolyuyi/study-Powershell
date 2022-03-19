@@ -1,6 +1,6 @@
-$Command = 'yt-dlp -h'
-Invoke-Expression $Command
+$Command = "echo ""a b c"""
+Invoke-Expression -Command $Command
 
 #get last cmd
-Get-ChildItem ./
+#Get-ChildItem ./
 #$a = (Invoke-History)

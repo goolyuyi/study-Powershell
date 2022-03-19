@@ -1,4 +1,5 @@
 # ref
+
 [about_Modules](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7.2)
 [about_Command_Precedence](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_command_precedence?view=powershell-7.2)
 
@@ -41,7 +42,7 @@ Get-Command -Module NetTCPIP
 ```
 
 * create module manifest
-    * in manifest, you also can explicitly export function, like `Export-ModuleMember`
+  * in manifest, you also can explicitly export function, like `Export-ModuleMember`
 
 ```powershell
 New-ModuleManifest -Path $env:ProgramFiles\WindowsPowerShell\Modules\MyScriptModule\MyScriptModule.psd1 -RootModule MyScriptModule -Author 'Mike F Robbins' -Description 'MyScriptModule' -CompanyName 'mikefrobbins.com'
