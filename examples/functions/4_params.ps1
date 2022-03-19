@@ -16,6 +16,17 @@ function Send-Greeting
 }
 
 "##############################"
+function Get-TheArgs
+{
+    param(
+        $ag
+    )
+    $args | Format-List
+    $PSBoundParameters
+}
+
+Get-TheArgs 1, 2, 3 -ag a b -aa c
+"##############################"
 function Get-AdvancedParams
 {
     Param(
