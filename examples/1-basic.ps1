@@ -12,9 +12,6 @@ $a -ge 7 | Out-Host #7,8,9
 
 [DateTime]'2001-11-12' -lt [DateTime]'2020-08-01' # True
 
-"PowerShell" -like "*shell"             # Output: True
-"PowerShell" -match '^Power\w+'         # Output: True
-
 "Bag", "Beg", "Big", "Bog", "Bug" -match 'b[iou]g'  #Output: Big, Bog, Bug
 
 $a = 1
@@ -38,7 +35,16 @@ $p
 
 "Today is $( Get-Date )"
 
+$hash = @{ Number = 1; Shape = "Square"; Color = "Blue" }
+$hash.Number
+$hash["Shape"]
 
-
+$string = @"
+Msg1 = Type "Windows".
+Msg2 = She said, "Hello, World."
+Msg3 = Enter an alias (or "nickname").
+"@
+$hash = ConvertFrom-StringData $string
+$hash
 
 
