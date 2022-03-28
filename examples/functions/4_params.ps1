@@ -134,5 +134,32 @@ Get-ValidatedParams -BB "" -CC aaa, bbb -DD 1996 -EE 4
 
 #By default, all function parameters are positional.PowerShell assigns position numbers to parameters in the order in which the parameters are declared in the function.
 
+"##############################"
+#example of ValueFromPipelineByPropertyName
+Function Get-Something
+{
+    [cmdletbinding()]
+    Param (
+        [parameter(ValueFromPipelineByPropertyName = $True)]
+        [string[]]$Name,
+        [parameter(ValueFromPipelineByPropertyName = $True)]
+        [string[]]$Directory
+    )
+    Begin {
+        Write-Verbose "Initialize stuff in Begin block"
+    }
 
+    Process {
+        Write-Verbose "Process block"
+        Write-Host "Name: $Name"
+        Write-Host "Directory: $Directory"
+    }
+
+    End {
+        Write-Verbose "Final work in End block"
+        $Report
+    }
+}
+
+Get-ChildItem | Get-Something
 

@@ -23,6 +23,7 @@ function Get-PipelineBeginEnd
 }
 1, 2, 3, 4 | Get-PipelineBeginEnd
 "##############################"
+# filter example
 filter Get-ErrorLog([switch]$message)
 {
     if ($message)
@@ -36,7 +37,6 @@ filter Get-ErrorLog([switch]$message)
 }
 
 1, 2, 3, 4 | Get-ErrorLog -message | Get-Pipeline
-"##############################"
 1, 2, 3, 4 | Get-ErrorLog  | Get-Pipeline
 
 "##############################"

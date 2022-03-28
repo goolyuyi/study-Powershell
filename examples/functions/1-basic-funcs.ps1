@@ -3,7 +3,7 @@ function Get-PowerShellProcess
     Get-Process pwsh
 }
 
-Get-PowerShellProcess 
+Get-PowerShellProcess
 
 "##############################"
 
@@ -11,7 +11,7 @@ Get-PowerShellProcess
 #   function [<scope:>]<name>
 #   {
 #   param([type]$parameter1 [,[type]$parameter2])
-#   dynamicparam {<statement list>}
+#   dynamicparam {<statement list>} #should return a hashtable
 #   begin {<statement list>}
 #   process {<statement list>}
 #   end {<statement list>} # end is DEFAULT

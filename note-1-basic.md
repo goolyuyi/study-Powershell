@@ -63,14 +63,14 @@ Get-Command -Noun U*
 
 ### Essential Command
 
-* Get-Member
-* Select-Object
+* `Get-Member`
+* `Select-Object`
   * `Get-Service | Select-Object -Property DisplayName, Running, Status | Where-Object CanPauseAndContinue`
-* Where-Object
+* `Where-Object`
   * `Get-Service | Where-Object Name -eq w32time`
-* Out-String/Out-File/Out-GridView/Format-Table/Format-List/Format-Wide
+* `Out-String`/`Out-File`/`Out-GridView`/`Out-Null`/`Format-Table`/`Format-List`/`Format-Wide`
 * `ls Variable:`
-* Write-Output/Write-Host/Write-Verbose/Write-Error
+* `Write-Output`/`Write-Host`/`Write-Verbose`/`Write-Error`
 
 ## Automatic Variables
 
@@ -80,6 +80,13 @@ Get-Command -Noun U*
 * `$HOME`
 * `$args`
 * `$PSBoundParameters`
+* `$?` last exit code
+* `$args` command line arguments
+* `$Error`
+* `$Host`
+* `$Matches`
+* `$MyInvocation`
+* `$PROFILE`
 
 ## Execution Policies
 
@@ -128,8 +135,8 @@ Get-Command -Noun U*
   * [about_Functions_CmdletBindingAttribute](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_cmdletbindingattribute?view=powershell-7.2)
   * [about_Functions_Advanced_Parameters](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced_parameters?view=powershell-7.2)
     * [Parameter and variable validation attributes](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_argument_completion?view=powershell-7.2#argumentcompletions-attribute)
-    * [about_Functions_Argument_Completion](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_argument_completion?view=powershell-7.2#argumentcompletions-attribute)
   * [about_Functions_Advanced_Methods](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced_methods?view=powershell-7.2)
+* [about_Functions_Argument_Completion](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_argument_completion?view=powershell-7.2#argumentcompletions-attribute)
 * [about_CommonParameters](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_commonparameters?view=powershell-7.2)
 * [about_Comment_Based_Help](https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_comment_based_help?view=powershell-7.2)
 * [about_Scopes](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.2)

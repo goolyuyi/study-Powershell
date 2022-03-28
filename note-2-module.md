@@ -1,7 +1,9 @@
 # ref
 
-[about_Modules](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7.2)
-[about_Command_Precedence](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_command_precedence?view=powershell-7.2)
+* [about_Modules](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_modules?view=powershell-7.2)
+* [about_Command_Precedence](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_command_precedence?view=powershell-7.2)
+* [Writing a Powershell Cmdlet](https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-overview?view=powershell-7.2)
+* [Writing a Windows PowerShell Module](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/writing-a-windows-powershell-module?view=powershell-7.2)
 
 ## file ext
 
@@ -18,13 +20,6 @@
 ```
 
 ## module
-
-* module path:
-
-```powershell
-$env:PSModulePath -split ';'
-```
-
 * Export: use Export-ModuleMember to explicitly export a function in `psm1`, otherwise all function will be exported in
   a `psm1`
 
@@ -47,3 +42,5 @@ Get-Command -Module NetTCPIP
 ```powershell
 New-ModuleManifest -Path $env:ProgramFiles\WindowsPowerShell\Modules\MyScriptModule\MyScriptModule.psd1 -RootModule MyScriptModule -Author 'Mike F Robbins' -Description 'MyScriptModule' -CompanyName 'mikefrobbins.com'
 ```
+
+

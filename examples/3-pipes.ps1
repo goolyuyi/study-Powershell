@@ -15,5 +15,3 @@ Get-Content $MyInvocation.MyCommand | Measure-Object -Line
 $pros = Get-Process -Name *note*
 Format-Table -InputObject $pros -Property ProcessName, StartTime, PeakPagedMemorySize
 
-#NOTE: put bash log as string in pwsh
-cat ./4-operators.ps1 | Select-String -Pattern "-String"

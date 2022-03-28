@@ -1,12 +1,14 @@
 ## Ref
+* [about_PowerShell_Config](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_powershell_config?view=powershell-7.2)
 * [about_PSReadLine](https://docs.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline#completion-functions)
 * [about_Profiles](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.2)
-  * reuse cross session
-* [about_Preference_Variables](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-7.2)
-  * powershell preference
+* [about_Preference_Variables](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-7.2) -  - Variables that customize the behavior of PowerShell.
   * `$PSModuleAutoLoadingPreference`
 
 ## Profile
+`$PSHOME`
+`$Home`
+
 | Description                | Path                                                                                                                                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | All Users, All Hosts       | Windows - $PSHOME\Profile.ps1<br/>Linux - /usr/local/microsoft/powershell/7/profile.ps1<br/>macOS - /usr/local/microsoft/powershell/7/profile.ps1                                                                |

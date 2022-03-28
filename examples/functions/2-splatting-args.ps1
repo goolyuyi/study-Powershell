@@ -23,8 +23,6 @@ Invoke-Command -ScriptBlock {
     param([string[]]$words) $words -join ' '
 } -ArgumentList (,$array)
 
-
-
 function Test1
 {
     param($a, $b, $c)
@@ -53,9 +51,14 @@ Test2 1 2 3
 function Get-MyCommand
 {
     Param ([switch]$P, [switch]$C)
-    if ($P) { Get-Process @Args
+    if ($P)
+    {
+        Get-Process @Args
     }
-    if ($C) { Get-Command @Args }
+    if ($C)
+    {
+        Get-Command @Args
+    }
 }
 
 Get-MyCommand -P -C -Name PowerShell

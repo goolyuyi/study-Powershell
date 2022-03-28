@@ -1,7 +1,10 @@
 "PowerShell" -like "*shell"             # Output: True
 "PowerShell" -match '^Power\w+'         # Output: True
+"PowerShell" -match '^Power(?=S\w+)'    # Output: True
 
-$env:Path | Out-String | ForEach-Object { $_.split(";") }
+($env:Path | Out-String).split(";")
+
+"PS version: $( $PSVersionTable.PSVersion )"
 
 'Hello', 'HELLO' | Select-String -Pattern 'HELLO' -CaseSensitive -SimpleMatch
 
@@ -12,7 +15,6 @@ $i = 5
 'The value of $(2+3) is 5.'
 
 "As they say, `"live and learn.`""
-
 
 @"
 Even if you have not created a profile,
@@ -27,9 +29,8 @@ $first = @{
     age = 33
 }
 $last = "k"
+
 'Hello, {0} {1}.' -f $first, $last
-
-
 "Population {0:N0}" -f  8175133
 
 @(
@@ -42,9 +43,6 @@ $last = "k"
 "Lastname:FirstName:Address" -split "(:)"
 "Lastname/:/FirstName/:/Address" -split "/(:)/"
 'Chocolate-Vanilla-Strawberry-Blueberry' -split '(-)', 2
-
-"PowerShell" -match '^Power\w+' # Output: True
-"PowerShell" -like "*shell"
 
 $string = 'The last logged on user was CONTOSO\jsmith'
 $string -match 'was (?<domain>.+)\\(?<user>.+)'

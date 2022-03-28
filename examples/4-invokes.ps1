@@ -4,3 +4,7 @@ Invoke-Expression -Command $Command
 #get last cmd
 #Get-ChildItem ./
 #$a = (Invoke-History)
+
+
+&("help")
+&("ipconfig")

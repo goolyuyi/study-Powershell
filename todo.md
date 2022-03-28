@@ -1,5 +1,11 @@
-* [ ] string examples
-* [ ] function examples
+* [x] string examples
+* [x] function examples
+
+* [ ] completion normal cmd
+* [ ] similar ohmyzsh?
+* [ ] invoke dll?
+* [x] c# to pwsh?
+* [ ] write a c# module 
 
 * [ ] study cmder
 * [ ] WSMan

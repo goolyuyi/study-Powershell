@@ -1,0 +1,3 @@
+Get-PSReadLineOption
+
+Get-PSReadLineKeyHandler

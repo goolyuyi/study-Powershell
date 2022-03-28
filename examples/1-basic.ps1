@@ -8,6 +8,7 @@ $a -gt $b #False
 $null -ne $a #True
 
 $a = 5, 6, 7, 8, 9
+$a.GetType()
 $a -ge 7 | Out-Host #7,8,9
 
 [DateTime]'2001-11-12' -lt [DateTime]'2020-08-01' # True
@@ -19,7 +20,6 @@ $a -is [int]           # Output: True
 
 "def" -in "abc", "def" # True
 
-#print a object
 $a_obj = @{
     name = 'yi';
     age = 10
