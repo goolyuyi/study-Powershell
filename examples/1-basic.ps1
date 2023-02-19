@@ -1,14 +1,17 @@
+#var
 $a = 5
 $b = 6
 $a + $b # 11
 
 $a++ | Out-Host # 5,but $a=6
 
+#operator
+# https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-7.2
 $a -gt $b #False
 $null -ne $a #True
 
 $a = 5, 6, 7, 8, 9
-$a.GetType()
+$a.GetType() #type
 $a -ge 7 | Out-Host #7,8,9
 
 [DateTime]'2001-11-12' -lt [DateTime]'2020-08-01' # True
@@ -20,6 +23,7 @@ $a -is [int]           # Output: True
 
 "def" -in "abc", "def" # True
 
+#obj, hashtable
 $a_obj = @{
     name = 'yi';
     age = 10
@@ -34,10 +38,6 @@ $p = @{
 $p
 
 "Today is $( Get-Date )"
-
-$hash = @{ Number = 1; Shape = "Square"; Color = "Blue" }
-$hash.Number
-$hash["Shape"]
 
 $string = @"
 Msg1 = Type "Windows".

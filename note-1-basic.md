@@ -1,26 +1,3 @@
-## Help
-
-* `Get-Help`
-  
-  * `Update-Help` download the local help docs
-  * Mode:
-    * `-Full`
-    * `-Detailed`
-    * `-Examples`
-    * `-Online`
-    * `-Parameter param-name`
-      * `help Get-Help -Parameter Name`
-    * `-ShowWindow`
-* `Get-Command`
-
-```powershell
-Get-Command -ListImported
-Get-Command -Type Cmdlet | Sort-Object -Property Noun | Out-GridView
-Get-Command -Module Microsoft.PowerShell.Security, Microsoft.PowerShell.Utility
-Get-Command -Verb 'Get'
-Get-Command -Noun U*
-```
-
 ## Ref
 
 * [about_Automatic_Variable](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables)
@@ -36,6 +13,31 @@ Get-Command -Noun U*
 * [about_Output_Streams](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_output_streams?view=powershell-7.2)
 * [about_Parsing](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parsing?view=powershell-7.2)
 * [about_Special_Characters](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_special_characters?view=powershell-7.2)
+
+## Help
+
+### Get-Help
+
+* `Update-Help` download the local help docs
+* Mode:
+    * `-Full`
+    * `-Detailed`
+    * `-Examples`
+    * `-Online`
+    * `-Parameter param-name`
+        * `help Get-Help -Parameter Name`
+    * `-ShowWindow`
+
+### Get-Command
+
+```powershell
+Get-Command -ListImported
+Get-Command -Type Cmdlet | Sort-Object -Property Noun | Out-GridView
+Get-Command -Module Microsoft.PowerShell.Security, Microsoft.PowerShell.Utility
+Get-Command -Verb 'Get'
+Get-Command -Noun U*
+```
+
 ## Basic
 
 ### Useful Verb
@@ -65,12 +67,34 @@ Get-Command -Noun U*
 
 * `Get-Member`
 * `Select-Object`
-  * `Get-Service | Select-Object -Property DisplayName, Running, Status | Where-Object CanPauseAndContinue`
+
+```powershell
+Get-Service | Select-Object -Property DisplayName, Running, Status
+| Where-Object CanPauseAndContinue
+```
+
 * `Where-Object`
-  * `Get-Service | Where-Object Name -eq w32time`
-* `Out-String`/`Out-File`/`Out-GridView`/`Out-Null`/`Format-Table`/`Format-List`/`Format-Wide`
+
+```powershell
+Get-Service | Where-Object Name -eq w32time
+```
+
+* Outputs
+    * `Out-String`
+    * `Out-File`
+    * `Out-GridView`
+    * `Out-Null`
+    * `Format-Table`
+    * `Format-List`
+    * `Format-Wide`
+
 * `ls Variable:`
-* `Write-Output`/`Write-Host`/`Write-Verbose`/`Write-Error`
+
+* Writes
+    * `Write-Output`
+    * `Write-Host`
+    * `Write-Verbose`
+    * `Write-Error`
 
 ## Automatic Variables
 
@@ -98,13 +122,15 @@ Get-Command -Noun U*
 
 > 若要对应用程序环境变量进行Windows，请使用 System 控制面板。 选择 "高级系统设置" 。 在"高级 "选项卡 上，单击"环境变量..."
 
-`ls Env:`
+```powershell
+ls Env:
 
-`$Env:Path += ";c:\temp"`
+$Env:Path += ";c:\temp"
 
-`Remove-Item -Path Env:Path`
+Remove-Item -Path Env:Path
 
-`Set-Item -Path Env:Path -Value ($Env:Path + ";C:\Temp")`
+Set-Item -Path Env:Path -Value ($Env:Path + ";C:\Temp")
+```
 
 ## Object
 
@@ -121,29 +147,29 @@ Get-Command -Noun U*
 ## Invokes
 
 * `Invoke-Command`: run command on local or remote sessions
-  * `Invoke-Command -FilePath c:\scripts\test.ps1 -ComputerName Server01`
+    * `Invoke-Command -FilePath c:\scripts\test.ps1 -ComputerName Server01`
 * `Invoke-Expression`: Runs commands or expressions on the local computer.
-  * run anything like exe,script,bash script,ps1...
+    * run anything like exe,script,bash script,ps1...
 
 ## Functions
 
 * [about_Functions](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions?view=powershell-7.2)
 * [Approved Verbs](https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/approved-verbs-for-windows-powershell-commands?view=powershell-7.2)
-  * `Get-Verb`
+    * `Get-Verb`
 * [about_Splatting](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting?view=powershell-7.2)
 * Advanced:
-  * [about_Functions_CmdletBindingAttribute](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_cmdletbindingattribute?view=powershell-7.2)
-  * [about_Functions_Advanced_Parameters](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced_parameters?view=powershell-7.2)
-    * [Parameter and variable validation attributes](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_argument_completion?view=powershell-7.2#argumentcompletions-attribute)
-  * [about_Functions_Advanced_Methods](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced_methods?view=powershell-7.2)
+    * [about_Functions_CmdletBindingAttribute](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_cmdletbindingattribute?view=powershell-7.2)
+    * [about_Functions_Advanced_Parameters](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced_parameters?view=powershell-7.2)
+        * [Parameter and variable validation attributes](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_argument_completion?view=powershell-7.2#argumentcompletions-attribute)
+    * [about_Functions_Advanced_Methods](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced_methods?view=powershell-7.2)
 * [about_Functions_Argument_Completion](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_argument_completion?view=powershell-7.2#argumentcompletions-attribute)
 * [about_CommonParameters](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_commonparameters?view=powershell-7.2)
 * [about_Comment_Based_Help](https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_comment_based_help?view=powershell-7.2)
 * [about_Scopes](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.2)
-  * `global:`
-  * `local:`
-  * `private:`
-  * `script:`
-  * `using:`
+    * `global:`
+    * `local:`
+    * `private:`
+    * `script:`
+    * `using:`
 * [about_Requires](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_requires?view=powershell-7.2)
 
