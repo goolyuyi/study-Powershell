@@ -69,7 +69,11 @@ Get-SmallFiles 1mb 222 333 444
 #else { "Switch off" }
 
 #* Splatting: forward args
+#https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_splatting?view=powershell-7.4
 # Splatting, in general speaking , is to pass a hashtable
+# Syntax:
+# <CommandName> <optional parameters> @<HashTable> <optional parameters>
+# <CommandName> <optional parameters> @<Array> <optional parameters>
 
 #** forward a hashtable
 $HashArguments = @{
@@ -110,6 +114,7 @@ function Test2
 Test2 1 2 3
 
 #**Example
+# @Args:@Args represents all the parameters of the Get-Process cmdlet.
 function Get-MyCommand
 {
     Param ([switch]$P, [switch]$C)
