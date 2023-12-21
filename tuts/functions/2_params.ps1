@@ -1,6 +1,15 @@
-#cmdlet writes in c# or script
-# add [CmdletBinding] make function act like a cmdlet
+#* Ref:
+#https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced_parameters?view=powershell-7.4
 
+
+#* [CmdletBinding]: some metadata
+#https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_advanced?view=powershell-7.4
+#[CmdletBinding(ConfirmImpact=<String>,
+#DefaultParameterSetName=<String>,
+#HelpURI=<URI>,
+#SupportsPaging=<Boolean>,
+#SupportsShouldProcess=<Boolean>,
+#PositionalBinding=<Boolean>)]
 function Send-Greeting
 {
     [CmdletBinding()]
@@ -9,13 +18,14 @@ function Send-Greeting
         [string] $Name
     )
 
-    Process
     {
         Write-Host ("Hello " + $Name + "!")
     }
 }
 
-"##############################"
+#* Generic args:
+#args: all args passed in
+#$PSBoundParameters: only bound, aka. $ag
 function Get-TheArgs
 {
     param(
@@ -26,7 +36,18 @@ function Get-TheArgs
 }
 
 Get-TheArgs 1, 2, 3 -ag a b -aa c
-"##############################"
+
+#* Param's attributes
+# * Mandatory
+# * ValueFromPipeline
+# * HelpMessage
+# * switch
+# * Position
+#By default, all function parameters are positional.PowerShell assigns position numbers to parameters in the order
+# in which the parameters are declared in the function.
+# * ParameterSetName
+# * Alias
+# * [param type]
 function Get-AdvancedParams
 {
     Param(
@@ -78,9 +99,7 @@ function Get-AdvancedParams
 
 Get-AdvancedParams -AAA "AAA" -BBB -CCC "CCC" -DDD "DDD"  -A aaa  -toRemain 1, 2, 3, 4
 
-
-"##############################"
-
+#* Param's validation attributes
 function Get-ValidatedParams
 {
     Param(
@@ -131,10 +150,8 @@ function Get-ValidatedParams
 
 Get-ValidatedParams -BB "" -CC aaa, bbb -DD 1996 -EE 4
 
+#* Param from pipeline
 
-#By default, all function parameters are positional.PowerShell assigns position numbers to parameters in the order in which the parameters are declared in the function.
-
-"##############################"
 #example of ValueFromPipelineByPropertyName
 Function Get-Something
 {
@@ -163,3 +180,23 @@ Function Get-Something
 
 Get-ChildItem | Get-Something
 
+#* [OutputType] attribute
+#Describes an attribute that reports the type of object that the function returns.
+#https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_functions_outputtypeattribute?view=powershell-7.4
+
+#function SimpleFunction2
+#{
+#    [OutputType([<Type>])]
+#    Param ($Parameter1)
+#
+#    <function body>
+#}
+
+function Send-Greeting
+{
+    [OutputType([String])]
+    Param ($Name)
+
+    "Hello, $Name"
+}
+(Get-Command Send-Greeting).OutputType

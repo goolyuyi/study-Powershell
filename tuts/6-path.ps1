@@ -1,3 +1,4 @@
+
 Split-Path -Path "HKCU:\Software\Microsoft" -Qualifier
 # output: HKCU:
 

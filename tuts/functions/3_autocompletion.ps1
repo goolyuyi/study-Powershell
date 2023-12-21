@@ -1,3 +1,4 @@
+#* [ArgumentCompletions] attr
 #you can use `Tab` key
 function Test1
 {
@@ -12,7 +13,7 @@ function Test1
     $Message = 'bye'
 }
 
-
+#* ArgumentCompleter: a function
 function MyArgumentCompleter
 {
     param ($commandName,
