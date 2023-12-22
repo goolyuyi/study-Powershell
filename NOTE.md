@@ -1,13 +1,3 @@
-## Useful Commands
-### invoke...
-* `ii`
-* `iex`
-* `icm`
-
-### misc
-* `sls` Select-String
-
-
 # Customize PWSH
 
 ## PSReadLine

@@ -50,9 +50,9 @@ $last = "k"
 
 # array join
 @(
-'server1'
-'server2'
-'server3'
+    'server1'
+    'server2'
+    'server3'
 ) -join ','
 
 # split

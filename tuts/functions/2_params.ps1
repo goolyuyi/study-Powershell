@@ -38,6 +38,7 @@ function Get-TheArgs
 Get-TheArgs 1, 2, 3 -ag a b -aa c
 
 #* Param's attributes
+# * https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/parameter-attribute-declaration?view=powershell-7.4
 # * Mandatory
 # * ValueFromPipeline
 # * HelpMessage
@@ -200,3 +201,100 @@ function Send-Greeting
     "Hello, $Name"
 }
 (Get-Command Send-Greeting).OutputType
+
+
+#* Parameter Set
+#https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_parameter_sets?view=powershell-7.4
+#
+# * If no parameter set is specified for a parameter, the parameter belongs to all parameter sets.
+# * thinks as sub-commander in linux!
+
+#** Parameter Set Example:
+function Measure-Lines
+{
+    [CmdletBinding(DefaultParameterSetName = 'Path')]
+    param (
+        [Parameter(Mandatory, ParameterSetName = 'Path', Position = 0)]
+        [Parameter(Mandatory, ParameterSetName = 'PathAll', Position = 0)]
+        [string[]]$Path,
+
+        [Parameter(Mandatory, ParameterSetName = 'LiteralPathAll', ValueFromPipeline)]
+        [Parameter(Mandatory, ParameterSetName = 'LiteralPath', ValueFromPipeline)]
+        [string[]]$LiteralPath,
+
+        [Parameter(ParameterSetName = 'Path')]
+        [Parameter(ParameterSetName = 'LiteralPath')]
+        [switch]$Lines,
+
+        [Parameter(ParameterSetName = 'Path')]
+        [Parameter(ParameterSetName = 'LiteralPath')]
+        [switch]$Words,
+
+        [Parameter(ParameterSetName = 'Path')]
+        [Parameter(ParameterSetName = 'LiteralPath')]
+        [switch]$Characters,
+
+        [Parameter(Mandatory, ParameterSetName = 'PathAll')]
+        [Parameter(Mandatory, ParameterSetName = 'LiteralPathAll')]
+        [switch]$All,
+
+        [Parameter(ParameterSetName = 'Path')]
+        [Parameter(ParameterSetName = 'PathAll')]
+        [switch]$Recurse
+    )
+
+    begin {
+        if ($All)
+        {
+            $Lines = $Words = $Characters = $true
+        }
+        elseif (($Words -eq $false) -and ($Characters -eq $false))
+        {
+            $Lines = $true
+        }
+    }
+    process {
+        if ($Path)
+        {
+            $Files = Get-ChildItem -Path $Path -Recurse:$Recurse -File
+        }
+        else
+        {
+            $Files = Get-ChildItem -LiteralPath $LiteralPath -File
+        }
+        foreach ($file in $Files)
+        {
+            $result = [ordered]@{ }
+            $result.Add('File', $file.fullname)
+
+            $content = Get-Content -LiteralPath $file.fullname
+
+            if ($Lines)
+            {
+                $result.Add('Lines', $content.Length)
+            }
+
+            if ($Words)
+            {
+                $wc = 0
+                foreach ($line in $content)
+                {
+                    $wc += $line.split(' ').Length
+                }
+                $result.Add('Words', $wc)
+            }
+
+            if ($Characters)
+            {
+                $cc = 0
+                foreach ($line in $content)
+                {
+                    $cc += $line.Length
+                }
+                $result.Add('Characters', $cc)
+            }
+
+            New-Object -TypeName psobject -Property $result
+        }
+    }
+}
