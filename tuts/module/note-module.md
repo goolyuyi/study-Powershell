@@ -5,6 +5,13 @@
 * [Writing a Powershell Cmdlet](https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-overview?view=powershell-7.2)
 * [Writing a Windows PowerShell Module](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/writing-a-windows-powershell-module?view=powershell-7.2)
 
+## Note
+
+* for local module only need `.psm1`
+* for distribute module need `psd1` for meta info
+* no matter how, you need to export func/alias/var... in `psm1`
+    * use `Export-ModuleMember`
+
 ## file ext
 
 * `.ps1` powershell script
@@ -13,15 +20,16 @@
 
 ## dot source
 
-* like `source` in bash
+*  import with break the scope
+* like `source` in bash,
 
 ```powershell
 . .\Get-MrPSVersion.ps1
 ```
 
-## module
-* Export: use Export-ModuleMember to explicitly export a function in `psm1`, otherwise all function will be exported in
-  a `psm1`
+## detail
+
+* Export: use `Export-ModuleMember` to explicitly export a function/alias/vars in `psm1`
 
 ```powershell
 Export-ModuleMember -Function Get-MrPSVersion
@@ -37,7 +45,6 @@ Get-Command -Module NetTCPIP
 ```
 
 * create module manifest
-  * in manifest, you also can explicitly export function, like `Export-ModuleMember`
 
 ```powershell
 New-ModuleManifest -Path $env:ProgramFiles\WindowsPowerShell\Modules\MyScriptModule\MyScriptModule.psd1 -RootModule MyScriptModule -Author 'Mike F Robbins' -Description 'MyScriptModule' -CompanyName 'mikefrobbins.com'
