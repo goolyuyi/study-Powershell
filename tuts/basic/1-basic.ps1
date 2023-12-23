@@ -110,3 +110,46 @@ Invoke-Expression -Command $Command
 
 Get-ChildItem "./","path/error" > .\dir.log
 Get-ChildItem "./","path/error" 2>&1
+
+
+#* Providers
+#https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_providers?view=powershell-7.4
+
+# * Alias: PowerShell aliases
+# * Environment: Environment variables (for the process)
+# * FileSystem: Files and folders
+# * Function: Any functions in the session
+# * Variable: Any variables in the session
+
+# only in Windows:
+# * Registry: All loaded registry hives
+# * Certificate: The LocalMachine and CurrentUser certificate stores
+# * WSMan: Windows remoting configuration
+
+#** List all Providers
+Get-PSDrive
+#Output:
+#Name     Used (GB) Free (GB) Provider       Root
+#----     --------- --------- --------       ----
+#Alias                        Alias
+#C            89.13    111.64 FileSystem     C:\
+#Cert                         Certificate    \
+#D             0.45     21.86 FileSystem     D:\
+#Env                          Environment
+#Function                     Function
+#HKCU                         Registry       HKEY_CURRENT_USER
+#HKLM                         Registry       HKEY_LOCAL_MACHINE
+#Variable                     Variable
+#WSMan                        WSMan
+#
+
+
+#* Argument mode vs Expression mode
+#compare these two
+Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
+Get-Command -Name Get-Content commands.txt
+#VS
+Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
+Get-Command -Name (Get-Content commands.txt)
+
+
