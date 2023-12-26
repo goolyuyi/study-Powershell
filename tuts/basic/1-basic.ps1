@@ -55,12 +55,14 @@ $hash
 
 #* try catch block
 #https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_try_catch_finally?view=powershell-7.4
-try {
+try
+{
     NonsenseString
     Write-Output "aaaa"
     throw "This is an error."
 }
-catch {
+catch
+{
     Write-Host "An error occurred:"
     Write-Host $_
 }
@@ -108,8 +110,8 @@ Invoke-Expression -Command $Command
 # > overwrite >> append
 # >&1 redirect
 
-Get-ChildItem "./","path/error" > .\dir.log
-Get-ChildItem "./","path/error" 2>&1
+Get-ChildItem "./", "path/error" > .\dir.log
+Get-ChildItem "./", "path/error" 2>&1
 
 
 #* Providers
@@ -128,6 +130,7 @@ Get-ChildItem "./","path/error" 2>&1
 
 #** List all Providers
 Get-PSDrive
+Get-PSProvider
 #Output:
 #Name     Used (GB) Free (GB) Provider       Root
 #----     --------- --------- --------       ----
@@ -143,6 +146,9 @@ Get-PSDrive
 #WSMan                        WSMan
 #
 
+#** list all functions
+Get-ChildItem function: # list functions
+
 
 #* Argument mode vs Expression mode
 #compare these two
@@ -153,3 +159,117 @@ Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
 Get-Command -Name (Get-Content commands.txt)
 
 
+#* Query pwsh info
+#Get-PSBreakpoint            Get-PSProvider              Get-PSResource              Get-PSSessionCapability
+#Get-PSCallStack             Get-PSReadLineKeyHandler    Get-PSResourceRepository    Get-PSSessionConfiguration
+#Get-PSDrive                 Get-PSReadLineOption        Get-PSScriptFileInfo
+#Get-PSHostProcessInfo       Get-PSRepository            Get-PSSession
+
+#* Output level
+# Write-Output 1
+# Write-Error 2
+# Write-Warning 3
+# Write-Verbose 4
+# Write-Debug 5
+# Write-Information 6
+
+#* Object
+$process = Get-Process -Id $PID
+$process.Name
+
+#** get method desc
+'thisString'.Substring
+
+#*** add member
+empty = New-Object Object
+$empty | Add-Member -NotePropertyName New -NotePropertyValue 'Hello world'
+$params = @{
+    Name = 'Replace'
+    MemberType = 'ScriptMethod'
+    Value = { $this.New -replace 'world', 'everyone' }
+}
+$empty | Add-Member @params
+
+#** property set
+Get-Process -Id $PID | Get-Member -MemberType PropertySet
+
+#* code
+Get-Process | ForEach-Object {
+    Write-Host $_.Name -ForegroundColor Green
+}
+
+#** parallel
+$string = 'Hello world'
+1 | ForEach-Object -Parallel {
+    # The $string variable is only accessible if using is used.
+    $using:string
+}
+
+#* where
+Get-Process | Where-Object -Property StartTime -Value (Get-Date 9:00:00) -gt
+
+#* select
+Get-Process | Select-Object -Property Name, *Memory
+Get-ChildItem C:\ -Recurse | Select-Object -First 2
+Get-ChildItem C:\ | Select-Object -Skip 4 -First 1
+Get-ChildItem C:\ | Select-Object -Index 3, 4, 5
+
+#** programmatic select
+Get-Process | Select-Object @{ Name = 'ProcessID'; Expression = 'ID' }
+Get-Process | Select-Object @{ Name = 'ProcessID'; Expression = { $_.ID } }
+
+#** with ExpandProperty
+Get-Process | Select-Object -First 5 -ExpandProperty Name
+# vs raw
+Get-ChildItem $env:SYSTEMROOT\*.dll |Select-Object -Property VersionInfo -First 1|Format-List *
+Get-ChildItem $env:SYSTEMROOT\*.dll |Select-Object -Property FullName, Length -ExpandProperty VersionInfo |Format-List *
+
+#** with Unique
+1, 1, 1, 3, 5, 2, 2, 4 | Select-Object -Unique
+# same as
+1, 1, 1, 3, 5, 2, 2, 4 | Sort-Object | Get-Unique
+
+
+#* get type
+(Get-Process | Select-Object -First 1).GetType()
+
+#* group
+6, 7, 7, 8, 8, 8 | Group-Object -NoElement
+
+# two lvl group, think it has series of level
+Get-ChildItem C:\Windows\Assembly -Filter *.dll -Recurse |
+        Group-Object Name, Length -NoElement |
+        Where-Object Count -gt 1 |
+        Sort-Object Name -Descending |
+        Select-Object Name, Count -First 5
+
+#group email
+'one@one.example', 'two@one.example', 'three@two.example' |
+        Group-Object { ($_ -split '@')[1] }
+
+#** as hashtable
+$hashtable = @(
+    [IPAddress]'10.0.0.1'
+    [IPAddress]'10.0.0.2'
+    [IPAddress]'10.0.0.1'
+) | Group-Object -AsHashtable -AsString
+$hashtable['10.0.0.1']
+
+
+#* measure
+1, 5, 9, 79 | Measure-Object -Average -Maximum -Minimum -Sum
+
+Get-Process | Measure-Object WorkingSet -Average
+
+#* compare
+Compare-Object -ReferenceObject 1, 2, 3, 4 -DifferenceObject 1, 2
+
+# find out the same files in two folders
+$params = @{
+    ReferenceObject = Get-ChildItem C:\Windows\System32 -File
+    DifferenceObject = Get-ChildItem C:\Windows\SysWOW64 -File
+    Property = 'Name', 'Length'
+    IncludeEqual = $true
+    ExcludeDifferent = $true
+}
+Compare-Object @params

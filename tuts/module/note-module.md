@@ -50,4 +50,4 @@ Get-Command -Module NetTCPIP
 New-ModuleManifest -Path $env:ProgramFiles\WindowsPowerShell\Modules\MyScriptModule\MyScriptModule.psd1 -RootModule MyScriptModule -Author 'Mike F Robbins' -Description 'MyScriptModule' -CompanyName 'mikefrobbins.com'
 ```
 
-
+* set `$env:PSModulePath` that is pwsh search path
