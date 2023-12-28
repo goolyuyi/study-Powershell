@@ -1,4 +1,4 @@
-#* var
+#* var & object
 #https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_variables?view=powershell-7.4
 $a = 5
 $b = 6
@@ -6,26 +6,10 @@ $a + $b # 11
 
 $a++ | Out-Host # 5,but $a=6
 
-#* operator
-#**Ref:
-#https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-7.2
-$a -gt $b #False
-$null -ne $a #True
+$process = Get-Process -Id $PID
+$process.Name
 
-$a = 5, 6, 7, 8, 9
-$a.GetType() #type
-$a -ge 7 | Out-Host #7,8,9
-
-[DateTime]'2001-11-12' -lt [DateTime]'2020-08-01' # True
-
-"Bag", "Beg", "Big", "Bog", "Bug" -match 'b[iou]g'  #Output: Big, Bog, Bug
-
-$a = 1
-$a -is [int]           # Output: True
-
-"def" -in "abc", "def" # True
-
-#* obj, hashtable
+#** obj, hashtable
 #https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_hash_tables?view=powershell-7.4
 #https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_objects?view=powershell-7.4
 $a_obj = @{
@@ -41,6 +25,7 @@ $p = @{
 }
 $p
 
+#** convert hashtable
 "Today is $( Get-Date )"
 
 $string = @"
@@ -51,67 +36,232 @@ Msg3 = Enter an alias (or "nickname").
 $hash = ConvertFrom-StringData $string
 $hash
 
+$hashtable = @(
+    [IPAddress]'10.0.0.1'
+    [IPAddress]'10.0.0.2'
+    [IPAddress]'10.0.0.1'
+) | Group-Object -AsHashtable -AsString
+$hashtable['10.0.0.1']
 
+#** get method desc
+'thisString'.Substring
 
-#* try catch block
-#https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_try_catch_finally?view=powershell-7.4
-try
-{
-    NonsenseString
-    Write-Output "aaaa"
-    throw "This is an error."
+#*** add member
+empty = New-Object Object
+$empty | Add-Member -NotePropertyName New -NotePropertyValue 'Hello world'
+$params = @{
+    Name = 'Replace'
+    MemberType = 'ScriptMethod'
+    Value = { $this.New -replace 'world', 'everyone' }
 }
-catch
-{
-    Write-Host "An error occurred:"
-    Write-Host $_
+$empty | Add-Member @params
+
+#** property set
+Get-Process -Id $PID | Get-Member -MemberType PropertySet
+
+#** c# object
+#create a c# object
+[System.Uri]::new("https://www.bing.com")
+
+#** join array
+# same result: 1,2,3,4
+@(1, 2) + @(3, 4)
+(1, 2) + (3, 4)
+1, 2 + 3, 4
+
+#** join hashtable
+@{
+    key1 = 1
+} + @{
+    key2 = 2
 }
 
-Write-Output "bbbb"
+#** tenary
+$value = 1
+($value -eq 2) ? 'two': 'other number'
+
+#* string
+#** substitute
+"PS version: $( $PSVersionTable.PSVersion )"
+
+$i = 5
+"The value of $i is $i."
+"The value of `$i is $i."
+
+#** avoid substitue
+'The value of $(2+3) is 5.'
+
+#** escape for: ",\n
+"As they say, `"live and learn.`""
+"hashtable:`n$((@{
+key = 'value'
+} | Out-String).Trim() )"
+
+#** multi line literal string
+@"
+Even if you have not created a profile,
+the path of the profile file is:
+$profile.
+"@
+
+#** format string
+$first = @{
+name = 'yu'
+age = 33
+}
+$last = "k"
+'Hello, {
+0
+} {
+1
+}.' -f $first, $last
+"Population {0:N0}" -f 8175133
+
+#** like: use */?
+'afternoon' -like '*noo?'
+"good afternoon" -ilike "*after*"
+
+#** split,match,notmatch,replace use regex!
+
+#** match/notmatch
+
+#pwsh's spec regex '+': one or more spaces
+'The cow' -match 'The +cow' # Returns true
+
+#use $Matches to get match result
+'1234567689' -match '[0-4]*' # Output:True
+$Matches # Output:1234
+
+$string = 'The last logged on user was CONTOSO\jsmith'
+$string -match 'was (?<domain>.+)\\(?<user>.+)'
+
+#** split
+#https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_split?view=powershell-7.4
+'a1b2c3d4' -split '[0-9]' #only -split is regex, String.Split is not!
+$first, $second, $null = '1, 2, 3, 4, 5' -split ', ' # 3,4,5 discard
+
+"Lastname:FirstName:Address" -split ":"
+"Lastname:FirstName:Address" -split "(:)"
+"Lastname/:/FirstName/:/Address" -split "/(:)/"
+'Chocolate-Vanilla-Strawberry-Blueberry' -split '(-)', 2
+
+#** replace
+$SearchExp = '^(?<DomainName>[\w-.]+)\\(?<Username>[\w-.]+)$'
+$ReplaceExp = '${Username }@${DomainName }'
+"Contoso.local\John.Doe" -replace $SearchExp, $ReplaceExp
+
+'abababab' -replace 'a', 'c #Output:cbcbcbcb'
 
 #* pipeline
-#implicit foreach
 (Get-ChildItem -Recurse -Exclude *pyro* ../dumb-data/*video.txt).PSPath
 
 #use code block
-Get-ChildItem -R ../dumb-data | Where-Object { $_.PSPath -Match "349" } | Select-Object -Property PSPath
+Get-ChildItem -R ../dumb-data | Where-Object {
+$_.PSPath -Match "349"
+} | Select-Object -Property PSPath
 
-#example
 Get-ChildItem -R ../dumb-data | Group-Object -Property extension |Sort-Object -Property Count -Descending
 
-#use code block
-1..20 | Group-Object -Property { $_ % 2 }
+1..20 | Group-Object -Property {
+$_ % 2
+}
 
-#example
 Get-ChildItem | Measure-Object -Property length -Minimum -Maximum -Sum -Average
 Get-Content $MyInvocation.MyCommand | Measure-Object -Line
 
-#example
 #NOTE :this also turns to a pipe
 $pros = Get-Process -Name *note*
 Format-Table -InputObject $pros -Property ProcessName, StartTime, PeakPagedMemorySize
 
-#* invoke
-#invoke from string
-$Command = "echo ""a b c"""
-Invoke-Expression -Command $Command
+#** measure
+1, 5, 9, 79 | Measure-Object -Average -Maximum -Minimum -Sum
+Get-Process | Measure-Object WorkingSet -Average
 
-#invoke from string
-&("help")
-&("ipconfig")
+#** codeblock
+Get-Process | ForEach-Object {
+Write-Host $_.Name -ForegroundColor Green
+}
 
-#* c# object
-#create a c# object
-[System.Uri]::new("https://www.bing.com")
+#** parallel
+$string = 'Hello world'
+1 | ForEach-Object -Parallel {
+# The $string variable is only accessible if using is used.
+$using: string
+}
 
-#* redirect output
-#stream 1:log,2:err,3:warn,4:verbose,5:debug,6:info
+#** where
+Get-Process | Where-Object -Property StartTime -Value (Get-Date 9: 00: 00) -gt
 
-# > overwrite >> append
-# >&1 redirect
+#** select
+Get-Process | Select-Object -Property Name, *Memory
+Get-ChildItem C: \ -Recurse | Select-Object -First 2
+Get-ChildItem C: \ | Select-Object -Skip 4 -First 1
+Get-ChildItem C: \ | Select-Object -Index 3, 4, 5
 
-Get-ChildItem "./", "path/error" > .\dir.log
-Get-ChildItem "./", "path/error" 2>&1
+#** programmatic select
+Get-Process | Select-Object @{
+Name = 'ProcessID'; Expression = 'ID'
+}
+Get-Process | Select-Object @{
+Name = 'ProcessID'; Expression = {
+$_.ID
+}
+}
+
+#** with ExpandProperty
+Get-Process | Select-Object -First 5 -ExpandProperty Name
+# vs raw
+Get-ChildItem $env: SYSTEMROOT\*.dll |Select-Object -Property VersionInfo -First 1|Format-List *
+Get-ChildItem $env: SYSTEMROOT\*.dll |Select-Object -Property FullName, Length -ExpandProperty VersionInfo |Format-List *
+
+#** select-string: like grep
+'Hello', 'HELLO' | Select-String -Pattern 'HELLO' -CaseSensitive -SimpleMatch
+
+#** with Unique
+1, 1, 1, 3, 5, 2, 2, 4 | Select-Object -Unique
+
+
+#** group
+6, 7, 7, 8, 8, 8 | Group-Object -NoElement
+
+# two lvl group, think it has series of level
+Get-ChildItem C: \Windows\Assembly -Filter *.dll -Recurse |
+Group-Object Name, Length -NoElement |
+Where-Object Count -gt 1 |
+Sort-Object Name -Descending |
+Select-Object Name, Count -First 5
+
+#group email
+'one@one.example', 'two@one.example', 'three@two.example' |
+Group-Object {
+($_ -split '@')[1]
+}
+
+# same as
+1, 1, 1, 3, 5, 2, 2, 4 | Sort-Object | Get-Unique
+
+#** variable to receive foreach res
+$services = Get-CimInstance Win32_Service -Filter 'State = "Running"'
+$serviceInfo = foreach ($service in $services)
+{
+$process = Get-Process -ID $service.ProcessID
+[PSCustomObject]@{
+Name = $service.Name
+ProcessName = $process.Name
+ProcessID = $service.ProcessID
+Path = $process.Path
+MemoryUsed = $process.WorkingSet64 / 1MB
+}
+}
+
+#* Argument mode vs Expression mode
+#compare these two
+Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
+Get-Command -Name Get-Content commands.txt
+#VS
+Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
+Get-Command -Name (Get-Content commands.txt)
+
 
 
 #* Providers
@@ -149,16 +299,6 @@ Get-PSProvider
 #** list all functions
 Get-ChildItem function: # list functions
 
-
-#* Argument mode vs Expression mode
-#compare these two
-Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
-Get-Command -Name Get-Content commands.txt
-#VS
-Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
-Get-Command -Name (Get-Content commands.txt)
-
-
 #* Query pwsh info
 #Get-PSBreakpoint            Get-PSProvider              Get-PSResource              Get-PSSessionCapability
 #Get-PSCallStack             Get-PSReadLineKeyHandler    Get-PSResourceRepository    Get-PSSessionConfiguration
@@ -173,103 +313,6 @@ Get-Command -Name (Get-Content commands.txt)
 # Write-Debug 5
 # Write-Information 6
 
-#* Object
-$process = Get-Process -Id $PID
-$process.Name
+[DateTime]'2001-11-12' -lt [DateTime]'2020-08-01' # True
 
-#** get method desc
-'thisString'.Substring
-
-#*** add member
-empty = New-Object Object
-$empty | Add-Member -NotePropertyName New -NotePropertyValue 'Hello world'
-$params = @{
-    Name = 'Replace'
-    MemberType = 'ScriptMethod'
-    Value = { $this.New -replace 'world', 'everyone' }
-}
-$empty | Add-Member @params
-
-#** property set
-Get-Process -Id $PID | Get-Member -MemberType PropertySet
-
-#* code
-Get-Process | ForEach-Object {
-    Write-Host $_.Name -ForegroundColor Green
-}
-
-#** parallel
-$string = 'Hello world'
-1 | ForEach-Object -Parallel {
-    # The $string variable is only accessible if using is used.
-    $using:string
-}
-
-#* where
-Get-Process | Where-Object -Property StartTime -Value (Get-Date 9:00:00) -gt
-
-#* select
-Get-Process | Select-Object -Property Name, *Memory
-Get-ChildItem C:\ -Recurse | Select-Object -First 2
-Get-ChildItem C:\ | Select-Object -Skip 4 -First 1
-Get-ChildItem C:\ | Select-Object -Index 3, 4, 5
-
-#** programmatic select
-Get-Process | Select-Object @{ Name = 'ProcessID'; Expression = 'ID' }
-Get-Process | Select-Object @{ Name = 'ProcessID'; Expression = { $_.ID } }
-
-#** with ExpandProperty
-Get-Process | Select-Object -First 5 -ExpandProperty Name
-# vs raw
-Get-ChildItem $env:SYSTEMROOT\*.dll |Select-Object -Property VersionInfo -First 1|Format-List *
-Get-ChildItem $env:SYSTEMROOT\*.dll |Select-Object -Property FullName, Length -ExpandProperty VersionInfo |Format-List *
-
-#** with Unique
-1, 1, 1, 3, 5, 2, 2, 4 | Select-Object -Unique
-# same as
-1, 1, 1, 3, 5, 2, 2, 4 | Sort-Object | Get-Unique
-
-
-#* get type
-(Get-Process | Select-Object -First 1).GetType()
-
-#* group
-6, 7, 7, 8, 8, 8 | Group-Object -NoElement
-
-# two lvl group, think it has series of level
-Get-ChildItem C:\Windows\Assembly -Filter *.dll -Recurse |
-        Group-Object Name, Length -NoElement |
-        Where-Object Count -gt 1 |
-        Sort-Object Name -Descending |
-        Select-Object Name, Count -First 5
-
-#group email
-'one@one.example', 'two@one.example', 'three@two.example' |
-        Group-Object { ($_ -split '@')[1] }
-
-#** as hashtable
-$hashtable = @(
-    [IPAddress]'10.0.0.1'
-    [IPAddress]'10.0.0.2'
-    [IPAddress]'10.0.0.1'
-) | Group-Object -AsHashtable -AsString
-$hashtable['10.0.0.1']
-
-
-#* measure
-1, 5, 9, 79 | Measure-Object -Average -Maximum -Minimum -Sum
-
-Get-Process | Measure-Object WorkingSet -Average
-
-#* compare
-Compare-Object -ReferenceObject 1, 2, 3, 4 -DifferenceObject 1, 2
-
-# find out the same files in two folders
-$params = @{
-    ReferenceObject = Get-ChildItem C:\Windows\System32 -File
-    DifferenceObject = Get-ChildItem C:\Windows\SysWOW64 -File
-    Property = 'Name', 'Length'
-    IncludeEqual = $true
-    ExcludeDifferent = $true
-}
-Compare-Object @params
+"Bag", "Beg", "Big", "Bog", "Bug" -match 'b[iou]g'  #Output: Big, Bog, Bug
