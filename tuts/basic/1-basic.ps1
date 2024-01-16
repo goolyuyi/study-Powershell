@@ -110,11 +110,8 @@ name = 'yu'
 age = 33
 }
 $last = "k"
-'Hello, {
-0
-} {
-1
-}.' -f $first, $last
+
+'Hello, {0} {1}.' -f $first, $last
 "Population {0:N0}" -f 8175133
 
 #** like: use */?
