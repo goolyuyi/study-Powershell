@@ -80,10 +80,14 @@ Get-Process -Id $PID | Get-Member -MemberType PropertySet
 $value = 1
 ($value -eq 2) ? 'two': 'other number'
 
+#================================================================
+
 #* string
+
 #** substitute
 "PS version: $( $PSVersionTable.PSVersion )"
 
+#** escape
 $i = 5
 "The value of $i is $i."
 "The value of `$i is $i."
@@ -91,7 +95,7 @@ $i = 5
 #** avoid substitue
 'The value of $(2+3) is 5.'
 
-#** escape for: ",\n
+#** escape for: " \n
 "As they say, `"live and learn.`""
 "hashtable:`n$((@{
 key = 'value'
@@ -121,7 +125,6 @@ $last = "k"
 #** split,match,notmatch,replace use regex!
 
 #** match/notmatch
-
 #pwsh's spec regex '+': one or more spaces
 'The cow' -match 'The +cow' # Returns true
 
@@ -149,35 +152,24 @@ $ReplaceExp = '${Username }@${DomainName }'
 
 'abababab' -replace 'a', 'c #Output:cbcbcbcb'
 
+#================================================================
+
 #* pipeline
 (Get-ChildItem -Recurse -Exclude *pyro* ../dumb-data/*video.txt).PSPath
 
-#use code block
+#** use code block
 Get-ChildItem -R ../dumb-data | Where-Object {
 $_.PSPath -Match "349"
 } | Select-Object -Property PSPath
 
-Get-ChildItem -R ../dumb-data | Group-Object -Property extension |Sort-Object -Property Count -Descending
-
-1..20 | Group-Object -Property {
-$_ % 2
+#
+Get-Process | ForEach-Object {
+Write-Host $_.Name -ForegroundColor Green
 }
-
-Get-ChildItem | Measure-Object -Property length -Minimum -Maximum -Sum -Average
-Get-Content $MyInvocation.MyCommand | Measure-Object -Line
 
 #NOTE :this also turns to a pipe
 $pros = Get-Process -Name *note*
 Format-Table -InputObject $pros -Property ProcessName, StartTime, PeakPagedMemorySize
-
-#** measure
-1, 5, 9, 79 | Measure-Object -Average -Maximum -Minimum -Sum
-Get-Process | Measure-Object WorkingSet -Average
-
-#** codeblock
-Get-Process | ForEach-Object {
-Write-Host $_.Name -ForegroundColor Green
-}
 
 #** parallel
 $string = 'Hello world'
@@ -186,14 +178,30 @@ $string = 'Hello world'
 $using: string
 }
 
-#** where
+#** measure
+Get-ChildItem | Measure-Object -Property length -Minimum -Maximum -Sum -Average
+Get-Content $MyInvocation.MyCommand | Measure-Object -Line
+
+#
+1, 5, 9, 79 | Measure-Object -Average -Maximum -Minimum -Sum
+Get-Process | Measure-Object WorkingSet -Average
+
+
+#** where-object
 Get-Process | Where-Object -Property StartTime -Value (Get-Date 9: 00: 00) -gt
 
-#** select
+#** select-object
 Get-Process | Select-Object -Property Name, *Memory
 Get-ChildItem C: \ -Recurse | Select-Object -First 2
 Get-ChildItem C: \ | Select-Object -Skip 4 -First 1
 Get-ChildItem C: \ | Select-Object -Index 3, 4, 5
+
+#** -ExpandProperty
+Get-Process | Select-Object -First 5 -ExpandProperty Name
+# vs raw
+Get-ChildItem $env: SYSTEMROOT\*.dll |Select-Object -Property VersionInfo -First 1|Format-List *
+Get-ChildItem $env: SYSTEMROOT\*.dll |Select-Object -Property FullName, Length -ExpandProperty VersionInfo |Format-List *
+
 
 #** programmatic select
 Get-Process | Select-Object @{
@@ -205,39 +213,18 @@ $_.ID
 }
 }
 
-#** with ExpandProperty
-Get-Process | Select-Object -First 5 -ExpandProperty Name
-# vs raw
-Get-ChildItem $env: SYSTEMROOT\*.dll |Select-Object -Property VersionInfo -First 1|Format-List *
-Get-ChildItem $env: SYSTEMROOT\*.dll |Select-Object -Property FullName, Length -ExpandProperty VersionInfo |Format-List *
 
 #** select-string: like grep
 'Hello', 'HELLO' | Select-String -Pattern 'HELLO' -CaseSensitive -SimpleMatch
+Get-ChildItem -R | Select-String -Pattern "12" -Context 2 | ForEach-Object {Write-Host $_.Path; $_}
 
 #** with Unique
 1, 1, 1, 3, 5, 2, 2, 4 | Select-Object -Unique
-
-
-#** group
-6, 7, 7, 8, 8, 8 | Group-Object -NoElement
-
-# two lvl group, think it has series of level
-Get-ChildItem C: \Windows\Assembly -Filter *.dll -Recurse |
-Group-Object Name, Length -NoElement |
-Where-Object Count -gt 1 |
-Sort-Object Name -Descending |
-Select-Object Name, Count -First 5
-
-#group email
-'one@one.example', 'two@one.example', 'three@two.example' |
-Group-Object {
-($_ -split '@')[1]
-}
-
 # same as
 1, 1, 1, 3, 5, 2, 2, 4 | Sort-Object | Get-Unique
 
-#** variable to receive foreach res
+
+#** Example: variable to receive foreach res
 $services = Get-CimInstance Win32_Service -Filter 'State = "Running"'
 $serviceInfo = foreach ($service in $services)
 {
@@ -250,16 +237,47 @@ Path = $process.Path
 MemoryUsed = $process.WorkingSet64 / 1MB
 }
 }
+$serviceInfo
 
+#================================================================
+#* group-object
+Get-ChildItem -R ../dumb-data | Group-Object -Property extension |Sort-Object -Property Count -Descending
+
+$res = 1..20 | Group-Object -Property {
+$_ % 2
+}
+$res[1].Group[3]
+
+#** -NoElement
+6, 7, 7, 8, 8, 8 | Group-Object -NoElement
+
+#** Example: two lvl group, think it has series of level
+Get-ChildItem C:\Windows\Assembly -Filter *.dll -Recurse |
+Group-Object Name, Length -NoElement |
+Where-Object Count -gt 1 |
+Sort-Object Name -Descending |
+Select-Object Name, Count -First 5
+
+#** Example: group email
+'one@one.example', 'two@one.example', 'three@two.example' |
+Group-Object {
+($_ -split '@')[1]
+}
+
+#================================================================
 #* Argument mode vs Expression mode
 #compare these two
 Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
 Get-Command -Name Get-Content commands.txt
+
 #VS
 Set-Content -Path commands.txt -Value 'Get-ChildItem', 'Get-Item'
 Get-Command -Name (Get-Content commands.txt)
 
+#================================================================
 
+
+#================================================================
 
 #* Providers
 #https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_providers?view=powershell-7.4

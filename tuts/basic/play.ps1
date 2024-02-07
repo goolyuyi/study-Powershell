@@ -51,3 +51,5 @@ while ($i -lt 5){
     "i:{0}" -f $i
     $i++
 }
+
+#Compare-Object
